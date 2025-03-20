@@ -1,10 +1,10 @@
 // ==UserScript==
-// @name         模板项目
-// @author       作者名
+// @name         传令官
+// @author       子锋
 // @version      1.0.0
 // @description  这是海豹的js扩展模板项目，请自行修改信息
-// @timestamp    1674477074
-// 2023/1/23
+// @timestamp    1742479292
+// 2025/03/20
 // @license      MIT
-// @homepageURL  https://github.com/sealdice/sealdice-js-template
+// @homepageURL  https://github.com/misaka12843/sealdice-js
 // ==/UserScript==
