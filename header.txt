@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         传令官
 // @author       子锋
-// @version      1.0.0
+// @version      1.0.1
 // @description  以COC为主的特殊战斗规则，用.cl help查看如何使用
 // @timestamp    1742548999 
 // 20250321

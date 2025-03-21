@@ -1,47 +1,48 @@
 // import { sample } from "lodash-es";
 // import { nameList } from "./utils";
 
-const ruleText = "《传令官战斗规则》\n\n" +
-"1. 角色属性\n" +
-"每个角色的生命值等于玩家人数(NUM)。\n" +
-"(注意：开启规则后生命值和生命力(hp)分别计算)\n" +
-"每回合开始时，拥有的掷骰次数等于玩家人数 + 3。\n\n" +
-"2. 游戏机制\n" +
-"目标：击败所有敌人。\n" +
-"骰子类型：六面骰（d6）。\n" +
-"动作类型：\n" +
-"  🛡 防御动作（1 或 2）：闪避或格挡敌方攻击（.cl 防御）。\n" +
-"  ⚡ 特殊动作（3 或 4）：加强攻击或提前防御（.cl 特殊）。\n" +
-"  ⚔️ 攻击动作（5 或 6）：攻击敌方单位（.cl 攻击）。\n\n" +
-"3. 战斗流程\n" +
-"角色创建：\n" +
-"  使用标准COC7角色卡设定基础属性。\n" +
-"  通过.st 人数:X设置人数(NUM)，系统计算生命值和掷骰次数。\n" +
-"  使用.clg命令显示传令官角色状态。\n\n" +
-"回合流程：\n" +
-"  1. 回合开始：敌方先手，投掷骰子。\n" +
-"  2. 玩家投掷：\n" +
-"     使用.cl r单次投掷，或.cl all一次投掷所有骰子。\n" +
-"  3. 动作判定：\n" +
-"     攻击：若骰出 5 或 6，则获得一次攻击动作。\n" +
-"     防御：若骰出 1 或 2，则获得一次防御动作。\n" +
-"       成功防御则抵消一次攻击，否则生命值 -1，人数 -1。\n" +
-"     特殊动作（.cl 特殊）：\n" +
-"       加强下回合攻击伤害+1。\n" +
-"       提前防御敌方下回合的加强攻击。\n" +
-"  4. 回合结束（.cl 结束回合）：\n" +
-"     消耗完所有攻击和特殊动作后，弃掉所有防御动作。\n" +
-"     进入新回合，刷新掷骰次数。\n\n" +
-"4. 命令列表\n" +
-".st 人数:X 设置角色人数\n" +
-".sn clg 使用传令官特色名片\n" +
-".cl r 单次掷骰\n" +
-".cl all 一次性投掷所有骰子\n" +
-".cl 攻击 使用攻击动作\n" +
-".cl 防御 使用防御动作\n" +
-".cl 特殊 使用特殊动作\n" +
-".cl 结束回合 结束当前回合\n\n" +
-"本规则为COC7的扩展战斗机制，保留了原有技能和属性系统，可无缝衔接COC调查与角色扮演。";
+const ruleText =
+  '《传令官战斗规则》\n\n' +
+  '1. 角色属性\n' +
+  '每个角色的生命值等于玩家人数(NUM)。\n' +
+  '(注意：开启规则后生命值和生命力(hp)分别计算)\n' +
+  '每回合开始时，拥有的掷骰次数等于玩家人数 + 3。\n\n' +
+  '2. 游戏机制\n' +
+  '目标：击败所有敌人。\n' +
+  '骰子类型：六面骰（d6）。\n' +
+  '动作类型：\n' +
+  '  🛡 防御动作（1 或 2）：闪避或格挡敌方攻击（.cl 防御）。\n' +
+  '  ⚡ 特殊动作（3 或 4）：加强攻击或提前防御（.cl 特殊）。\n' +
+  '  ⚔️ 攻击动作（5 或 6）：攻击敌方单位（.cl 攻击）。\n\n' +
+  '3. 战斗流程\n' +
+  '角色创建：\n' +
+  '  使用标准COC7角色卡设定基础属性。\n' +
+  '  通过.st 人数:X设置人数(NUM)，系统计算生命值和掷骰次数。\n' +
+  '  使用.clg命令显示传令官角色状态。\n\n' +
+  '回合流程：\n' +
+  '  1. 回合开始：敌方先手，投掷骰子。\n' +
+  '  2. 玩家投掷：\n' +
+  '     使用.cl r单次投掷，或.cl all一次投掷所有骰子。\n' +
+  '  3. 动作判定：\n' +
+  '     攻击：若骰出 5 或 6，则获得一次攻击动作。\n' +
+  '     防御：若骰出 1 或 2，则获得一次防御动作。\n' +
+  '       成功防御则抵消一次攻击，否则生命值 -1，人数 -1。\n' +
+  '     特殊动作（.cl 特殊）：\n' +
+  '       加强下回合攻击伤害+1。\n' +
+  '       提前防御敌方下回合的加强攻击。\n' +
+  '  4. 回合结束（.cl 结束回合）：\n' +
+  '     消耗完所有攻击和特殊动作后，弃掉所有防御动作。\n' +
+  '     进入新回合，刷新掷骰次数。\n\n' +
+  '4. 命令列表\n' +
+  '.st 人数:X 设置角色人数\n' +
+  '.sn clg 使用传令官特色名片\n' +
+  '.cl r 单次掷骰\n' +
+  '.cl all 一次性投掷所有骰子\n' +
+  '.cl 攻击 使用攻击动作\n' +
+  '.cl 防御 使用防御动作\n' +
+  '.cl 特殊 使用特殊动作\n' +
+  '.cl 结束回合 结束当前回合\n\n' +
+  '本规则为COC7的扩展战斗机制，保留了原有技能和属性系统，可无缝衔接COC调查与角色扮演。';
 
 const template = {
   name: '传令官',
@@ -220,7 +221,7 @@ try {
 function main() {
   let ext = seal.ext.find('cl_system');
   if (!ext) {
-    ext = seal.ext.new('cl_system', '子锋', '1.0.0');
+    ext = seal.ext.new('cl_system', '子锋', '1.0.1');
     seal.ext.register(ext);
   }
 
@@ -245,7 +246,7 @@ function main() {
     if (val === 'r') {
       // 单次掷骰
       const [人数] = seal.vars.intGet(ctx, '人数');
-      const 掷骰次数 = 人数 + 3;
+      let 掷骰次数 = 人数 + 3;
 
       if (!playerData[userId]) {
         playerData[userId] = {
@@ -276,7 +277,7 @@ function main() {
       let actionMessage = '';
       if (roll <= 2) {
         playerData[userId].防御动作++;
-        actionMessage = '【防御】动作。';
+        actionMessage = '🛡【防御】动作。';
       } else if (roll <= 4) {
         playerData[userId].特殊动作++;
         actionMessage = '⚡【特殊】动作，可用于蓄力、防备或撤离。';
@@ -306,7 +307,8 @@ function main() {
           攻击动作: 0,
         };
       } else {
-        掷骰次数 = playerData[userId].掷骰次数; // 使用已更新的掷骰次数
+        playerData[userId].生命值 = 人数;
+        掷骰次数 = playerData[userId].掷骰次数;
       }
 
       if (掷骰次数 <= 0) {
@@ -314,9 +316,9 @@ function main() {
         return seal.ext.newCmdExecuteResult(true);
       }
 
-      let 防御动作 = 0;
-      let 特殊动作 = 0;
-      let 攻击动作 = 0;
+      let 防御动作 = playerData[userId].防御动作; // 保留之前的动作数据
+      let 特殊动作 = playerData[userId].特殊动作;
+      let 攻击动作 = playerData[userId].攻击动作;
 
       for (let i = 0; i < 掷骰次数; i++) {
         const roll = Math.floor(Math.random() * 6) + 1;
@@ -330,7 +332,7 @@ function main() {
       playerData[userId].攻击动作 = 攻击动作;
 
       // 同步更新角色卡属性
-      seal.vars.intSet(ctx, '掷骰次数', 0); // 一次性掷骰后，掷骰次数归零
+      seal.vars.intSet(ctx, '掷骰次数', 0);
       playerData[userId].掷骰次数 = 0;
 
       seal.replyToSender(
@@ -387,16 +389,30 @@ function main() {
         return seal.ext.newCmdExecuteResult(true);
       }
 
-      playerData[userId].防御动作 = 0;
-      playerData[userId].掷骰次数 = playerData[userId].人数 + 3;
-      seal.replyToSender(ctx, msg, '回合结束，防御动作已清空。');
+      // 添加限制条件：特殊动作和攻击动作都必须为 0
+      if (
+        playerData[userId].特殊动作 === 0 &&
+        playerData[userId].攻击动作 === 0
+      ) {
+        playerData[userId].防御动作 = 0;
+        // 修复：始终基于玩家人数属性重置掷骰次数
+        const [人数] = seal.vars.intGet(ctx, '人数');
+        playerData[userId].掷骰次数 = 人数 + 3;
+        seal.replyToSender(ctx, msg, '回合结束，防御动作已清空。');
+      } else {
+        seal.replyToSender(
+          ctx,
+          msg,
+          '特殊动作或攻击动作未消耗完毕，无法结束回合。'
+        );
+      }
+
       return seal.ext.newCmdExecuteResult(true);
     } else {
       seal.replyToSender(ctx, msg, ruleText);
       return seal.ext.newCmdExecuteResult(true);
     }
   };
-
   ext.cmdMap['cl'] = cmdCL;
   ext.cmdMap['clg'] = cmdCL;
   ext.cmdMap['传令官'] = cmdCL;

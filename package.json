@@ -1,12 +1,18 @@
 {
-  "name": "a-long-story",
+  "name": "cl_system",
   "version": "1.0.1",
-  "description": "once upon a time, ...",
+  "description": "一个用于传令官掷骰和回合管理的扩展",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
-  "repository": "https://github.com/sealdice/seal-swordworld",
-  "license": "Apache-2.0",
-  "keywords": [],
+  "repository": "https://github.com/misaka12843/sealdice-js", 
+  "license": "MIT",
+  "keywords": [
+    "sealdice",
+    "cl",
+    "传令官",
+    "掷骰",
+    "回合管理"
+  ],
   "scripts": {
     "build": "cross-env NODE_ENV=production node tools/build.js",
     "build-dev": "cross-env NODE_ENV=dev node tools/build.js"
