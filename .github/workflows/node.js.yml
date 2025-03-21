@@ -1,13 +1,12 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: Node.js CI and Release
 
 on:
   push:
-    branches: ['master']
-  pull_request:
-    branches: ['master']
+    tags:
+      - 'v*.*.*' # 只有当推送标签时才触发
 
 jobs:
   build:
@@ -30,12 +29,21 @@ jobs:
       - name: Run build
         run: npm run build
       - name: Create Release
+        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ github.ref_name }} # 使用github.ref_name
+          release_name: Release ${{ github.ref_name }}
           draft: false
           prerelease: false
-          artifacts: dist/clg.js # 上传clg.js作为发行版附件
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/clg.js
+          asset_name: clg.js
+          asset_content_type: application/javascript
