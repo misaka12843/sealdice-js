@@ -2,9 +2,9 @@
 // @name         传令官
 // @author       子锋
 // @version      1.0.0
-// @description  这是海豹的js扩展模板项目，请自行修改信息
-// @timestamp    1742479292
-// 2025/03/20
+// @description  以COC为主的特殊战斗规则，用.cl help查看如何使用
+// @timestamp    1742548999 
+// 20250321
 // @license      MIT
 // @homepageURL  https://github.com/misaka12843/sealdice-js
 // ==/UserScript==
