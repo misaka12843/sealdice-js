@@ -1,12 +1,9 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
 name: Node.js CI and Release
 
 on:
   push:
     tags:
-      - 'v*.*.*' # 只有当推送标签时才触发
+      - 'v*.*.*'
 
 jobs:
   build:
@@ -15,7 +12,6 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
       - uses: actions/checkout@v4
@@ -30,20 +26,39 @@ jobs:
         run: npm run build
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
+        uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }} # 使用github.ref_name
-          release_name: Release ${{ github.ref_name }}
-          draft: false
-          prerelease: false
+          script: |
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            const response = await octokit.repos.createRelease({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag_name: context.ref.replace('refs/tags/', ''),
+              name: `Release ${context.ref.replace('refs/tags/', '')}`,
+              draft: false,
+              prerelease: false,
+            });
+            return response.data;
       - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+        uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./dist/clg.js
-          asset_name: clg.js
-          asset_content_type: application/javascript
+          script: |
+            const fs = require('fs');
+            const { Octokit } = require("@octokit/rest");
+            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+            const uploadUrl = context.payload.release.upload_url;
+            const assetPath = './dist/clg.js';
+            const assetName = 'clg.js';
+            const assetContentType = 'application/javascript';
+            const asset = fs.readFileSync(assetPath);
+            await octokit.repos.uploadReleaseAsset({
+              url: uploadUrl,
+              headers: { 'content-type': assetContentType, 'content-length': asset.length },
+              name: assetName,
+              data: asset,
+            });

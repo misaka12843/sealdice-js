@@ -21,6 +21,7 @@
     "node": ">=10"
   },
   "dependencies": {
+    "@octokit/rest": "^21.1.1",
     "lodash-es": "^4.17.21"
   },
   "devDependencies": {
