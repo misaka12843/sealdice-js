@@ -1,10 +1,10 @@
 {
   "name": "cl_system",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "一个用于传令官掷骰和回合管理的扩展",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
-  "repository": "https://github.com/misaka12843/sealdice-js", 
+  "repository": "https://github.com/misaka12843/sealdice-js",
   "license": "MIT",
   "keywords": [
     "sealdice",
