@@ -21,7 +21,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
       - name: Install dependencies
-        run: npm install
+        run: |
+          npm install
+          npm install @octokit/rest
       - name: Run build
         run: npm run build
       - name: Create Release
@@ -31,34 +33,42 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-            const response = await octokit.repos.createRelease({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tag_name: context.ref.replace('refs/tags/', ''),
-              name: `Release ${context.ref.replace('refs/tags/', '')}`,
-              draft: false,
-              prerelease: false,
-            });
-            return response.data;
+            try {
+              const { Octokit } = require("@octokit/rest");
+              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+              const response = await octokit.repos.createRelease({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag_name: context.ref.replace('refs/tags/', ''),
+                name: `Release ${context.ref.replace('refs/tags/', '')}`,
+                draft: false,
+                prerelease: false,
+              });
+              core.setOutput('upload_url', response.data.upload_url)
+            } catch (error) {
+              core.setFailed(`Failed to create release: ${error.message}`);
+            }
       - name: Upload Release Asset
         uses: actions/github-script@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           script: |
-            const fs = require('fs');
-            const { Octokit } = require("@octokit/rest");
-            const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-            const uploadUrl = ${{ steps.create_release.outputs.upload_url }};
-            const assetPath = './dist/clg.js';
-            const assetName = 'clg.js';
-            const assetContentType = 'application/javascript';
-            const asset = fs.readFileSync(assetPath);
-            await octokit.repos.uploadReleaseAsset({
-              url: uploadUrl,
-              headers: { 'content-type': assetContentType, 'content-length': asset.length },
-              name: assetName,
-              data: asset,
-            });
+            try {
+              const fs = require('fs');
+              const { Octokit } = require("@octokit/rest");
+              const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
+              const uploadUrl = "${{ steps.create_release.outputs.upload_url }}";
+              const assetPath = './dist/clg.js';
+              const assetName = 'clg.js';
+              const assetContentType = 'application/javascript';
+              const asset = fs.readFileSync(assetPath);
+              await octokit.repos.uploadReleaseAsset({
+                url: uploadUrl,
+                headers: { 'content-type': assetContentType, 'content-length': asset.length },
+                name: assetName,
+                data: asset,
+              });
+            } catch (error) {
+              core.setFailed(`Failed to upload release asset: ${error.message}`);
+            }
