@@ -42,15 +42,15 @@ const ruleText =
   '.cl 防御 使用防御动作\n' +
   '.cl 特殊 使用特殊动作\n' +
   '.cl 结束回合 结束当前回合\n\n' +
-  '本规则为COC7的扩展战斗机制，保留了原有技能和属性系统，可无缝衔接COC调查与角色扮演。';
+  '本战斗规则借用豪杰物语规则中的战斗机制并进行一定程度的魔改，用于拯救COC规则冗长无趣的战斗轮。但仅限交流使用，请勿作为正式规则看待，请勿进行二传，十分感谢。';
 
 const template = {
   name: '传令官',
   fullname: '传令官角色卡制作',
   authors: ['子锋'],
-  version: '1.0.1',
-  updatedTime: '20250320',
-  templateVer: '1.0',
+  version: '1.0.3',
+  updatedTime: '20250327',
+  templateVer: '1.3',
   nameTemplate: {
     clg: {
       template: '{$t玩家_RAW} HP{HP} NUM{人数} 掷骰次数{掷骰次数}',
