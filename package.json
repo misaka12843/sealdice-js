@@ -1,6 +1,6 @@
 {
   "name": "cl_system",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "一个用于传令官掷骰和回合管理的扩展",
   "main": "build/index.js",
   "typings": "build/index.d.ts",
