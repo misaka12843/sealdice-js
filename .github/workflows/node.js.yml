@@ -51,7 +51,7 @@ jobs:
             const fs = require('fs');
             const { Octokit } = require("@octokit/rest");
             const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-            const uploadUrl = context.payload.release.upload_url;
+            const uploadUrl = ${{ steps.create_release.outputs.upload_url }};
             const assetPath = './dist/clg.js';
             const assetName = 'clg.js';
             const assetContentType = 'application/javascript';
