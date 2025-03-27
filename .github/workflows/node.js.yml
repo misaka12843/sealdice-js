@@ -26,7 +26,7 @@ jobs:
           npm install @octokit/rest
       - name: Run build
         run: npm run build
-      - name: Create Release
+      - name: Create or Update Release
         id: create_release
         uses: actions/github-script@v6
         env:
@@ -36,17 +36,49 @@ jobs:
             try {
               const { Octokit } = require("@octokit/rest");
               const octokit = new Octokit({ auth: process.env.GITHUB_TOKEN });
-              const response = await octokit.repos.createRelease({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                tag_name: context.ref.replace('refs/tags/', ''),
-                name: `Release ${context.ref.replace('refs/tags/', '')}`,
-                draft: false,
-                prerelease: false,
-              });
+              const tagName = context.ref.replace('refs/tags/', '');
+
+              // 先尝试获取现有的 Release
+              let existingRelease;
+              try {
+                existingRelease = await octokit.repos.getReleaseByTag({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag: tagName
+                });
+              } catch (error) {
+                // 如果没有找到现有 Release，则创建新的
+                if (error.status !== 404) {
+                  throw error;
+                }
+              }
+
+              let response;
+              if (existingRelease) {
+                // 如果 Release 已存在，更新现有 Release
+                response = await octokit.repos.updateRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  release_id: existingRelease.data.id,
+                  name: `Release ${tagName}`,
+                  draft: false,
+                  prerelease: false
+                });
+              } else {
+                // 创建新的 Release
+                response = await octokit.repos.createRelease({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  tag_name: tagName,
+                  name: `Release ${tagName}`,
+                  draft: false,
+                  prerelease: false
+                });
+              }
+
               core.setOutput('upload_url', response.data.upload_url)
             } catch (error) {
-              core.setFailed(`Failed to create release: ${error.message}`);
+              core.setFailed(`Failed to create/update release: ${error.message}`);
             }
       - name: Upload Release Asset
         uses: actions/github-script@v6
@@ -63,6 +95,31 @@ jobs:
               const assetName = 'clg.js';
               const assetContentType = 'application/javascript';
               const asset = fs.readFileSync(assetPath);
+
+              // 先删除可能存在的同名资源
+              const release = await octokit.repos.getReleaseByTag({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                tag: context.ref.replace('refs/tags/', '')
+              });
+
+              const existingAssets = await octokit.repos.listReleaseAssets({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                release_id: release.data.id
+              });
+
+              for (const asset of existingAssets.data) {
+                if (asset.name === assetName) {
+                  await octokit.repos.deleteReleaseAsset({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    asset_id: asset.id
+                  });
+                }
+              }
+
+              // 上传新资源
               await octokit.repos.uploadReleaseAsset({
                 url: uploadUrl,
                 headers: { 'content-type': assetContentType, 'content-length': asset.length },
